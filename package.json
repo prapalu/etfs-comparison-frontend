@@ -2,12 +2,18 @@
   "name": "etfs-comparison-frontend",
   "version": "0.1.0",
   "private": true,
+  "author": {
+    "name": "Gianmarco Prando",
+    "email": "gianmarcoprando@gmail.com",
+    "url": "https://gianmarcoprando.it"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint"
   },
+  "packageManager": "pnpm@10.12.4",
   "dependencies": {
     "react": "19.1.0",
     "react-dom": "19.1.0",
