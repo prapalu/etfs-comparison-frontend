@@ -1,15 +1,4 @@
 "use client";
-import React from "react";
-import {
-  BellIcon,
-  BriefcaseIcon,
-  Home,
-  Package,
-  PanelLeft,
-  Settings,
-  ShoppingCartIcon,
-  Users,
-} from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -23,8 +12,19 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import clsx from "clsx";
+import {
+  BellIcon,
+  BriefcaseIcon,
+  Home,
+  Package,
+  PanelLeft,
+  Settings,
+  ShoppingCartIcon,
+  Users,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import React from "react";
 
 import { Button } from "@/components/ui/button";
 
@@ -79,7 +79,7 @@ export const MobileNav: React.FC = () => {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button size="icon" variant="outline" className="sm:hidden">
+        <Button size="sm" variant="outline" className="sm:hidden">
           <PanelLeft className="h-5 w-5" />
           <span className="sr-only">Toggle Menu</span>
         </Button>

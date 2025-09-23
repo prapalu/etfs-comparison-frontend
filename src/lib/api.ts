@@ -1,15 +1,11 @@
 import type {
-  ApiResponse,
-  ETFsResponse,
-  ETFDetailResponse,
-  ETFHistoriesResponse,
-  ETFHistoriesParams,
-  ComparisonResponse,
   ComparisonParams,
+  ComparisonResponse,
+  ETFDetailResponse,
+  ETFsResponse,
   RequestConfig,
-  RequestMethod,
 } from "@/types/api";
-import type { ETF, ETFHistory, ComparisonResult } from "@/types/etf";
+import type { ETFHistory } from "@/types/etf";
 
 // Configuration
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "/api";
@@ -172,11 +168,11 @@ export const api = {
     /**
      * Get ETF histories with optional filters
      */
-    get: async (
-      params: ETFHistoriesParams = {}
-    ): Promise<ETFHistoriesResponse> => {
-      return fetchApi<ETFHistoriesResponse>("/etf-histories", { params });
-    },
+    // get: async (
+    //   params: ETFHistoriesParams = {}
+    // ): Promise<ETFHistoriesResponse> => {
+    //   return fetchApi<ETFHistoriesResponse>("/etf-histories", { params });
+    // },
 
     /**
      * Get history for specific ETF and date
@@ -318,7 +314,7 @@ export function clearCache(): void {
 // Legacy API methods for backward compatibility
 export const getETFs = api.etfs.getAll;
 export const getETF = api.etfs.getById;
-export const getETFHistories = api.histories.get;
+//export const getETFHistories = api.histories.get;
 export const compareETFs = (
   etfId1: string,
   etfId2: string,

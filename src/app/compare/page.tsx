@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { ETF } from "@/types/etf";
-import { api } from "@/lib/api";
 import { ETFComparison } from "@/components/etf-comparison";
 import { ChartSkeleton } from "@/components/ui/skeleton";
+import { api } from "@/lib/api";
+import { ETF } from "@/types/etf";
+import { useEffect, useState } from "react";
 
 export default function ComparePage() {
   const [etfs, setETFs] = useState<ETF[]>([]);
@@ -30,7 +30,8 @@ export default function ComparePage() {
 
   const handleCompare = async (etfId1: string, etfId2: string) => {
     try {
-      return await api.comparison.compare({ etf1: etfId1, etf2: etfId2 });
+      return (await api.comparison.compare({ etf1: etfId1, etf2: etfId2 }))
+        .comparison;
     } catch (error) {
       console.error("Comparison failed:", error);
       return null;

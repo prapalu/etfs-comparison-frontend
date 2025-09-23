@@ -1,12 +1,12 @@
-import { ChartOptions, TooltipItem } from "chart.js";
-import { CHART_COLORS, CHART_CONFIG } from "./constants";
-import { formatPercentage, formatCurrency, formatNumber } from "./utils";
 import type {
   AllocationKPI,
+  ChartDataset,
   Holding,
   ProcessedAllocation,
-  ChartDataset,
 } from "@/types/etf";
+import { ChartOptions, TooltipItem } from "chart.js";
+import { CHART_COLORS, CHART_CONFIG } from "./constants";
+import { formatPercentage } from "./utils";
 
 /**
  * Get chart colors for specified count
@@ -69,6 +69,7 @@ export function getBaseChartOptions(isDark: boolean): ChartOptions {
     },
     scales: {
       x: {
+        type: "category",
         ticks: {
           color: textColor,
           font: {
@@ -77,10 +78,14 @@ export function getBaseChartOptions(isDark: boolean): ChartOptions {
         },
         grid: {
           color: gridColor,
-          drawBorder: false,
+          display: true,
+        },
+        border: {
+          display: false,
         },
       },
       y: {
+        type: "linear",
         ticks: {
           color: textColor,
           font: {
@@ -89,7 +94,10 @@ export function getBaseChartOptions(isDark: boolean): ChartOptions {
         },
         grid: {
           color: gridColor,
-          drawBorder: false,
+          display: true,
+        },
+        border: {
+          display: false,
         },
       },
     },
@@ -106,25 +114,50 @@ export function getBaseChartOptions(isDark: boolean): ChartOptions {
 }
 
 /**
- * Get pie/doughnut chart options
+ * Get pie chart options
  */
 export function getPieChartOptions(
   isDark: boolean,
-  showLegend: boolean = true
+  showLegend = true
 ): ChartOptions<"pie"> {
-  const baseOptions = getBaseChartOptions(isDark);
+  const textColor = isDark ? "#f3f4f6" : "#374151";
+  const backgroundColor = isDark ? "#1f2937" : "#ffffff";
+  const gridColor = isDark ? "#374151" : "#e5e7eb";
 
   return {
-    ...baseOptions,
+    responsive: CHART_CONFIG.RESPONSIVE,
+    maintainAspectRatio: CHART_CONFIG.MAINTAIN_ASPECT_RATIO,
+    animation: {
+      duration: CHART_CONFIG.ANIMATION_DURATION,
+    },
     plugins: {
-      ...baseOptions.plugins,
       legend: {
-        ...baseOptions.plugins?.legend,
         display: showLegend,
-        position: "bottom" as const,
+        position: "bottom",
+        labels: {
+          color: textColor,
+          usePointStyle: true,
+          padding: 20,
+          font: {
+            size: 12,
+          },
+        },
       },
       tooltip: {
-        ...baseOptions.plugins?.tooltip,
+        backgroundColor,
+        titleColor: textColor,
+        bodyColor: textColor,
+        borderColor: gridColor,
+        borderWidth: 1,
+        cornerRadius: 8,
+        titleFont: {
+          size: 14,
+          weight: "bold",
+        },
+        bodyFont: {
+          size: 13,
+        },
+        padding: 12,
         callbacks: {
           label: function (context: TooltipItem<"pie">) {
             const label = context.label || "";
@@ -135,7 +168,6 @@ export function getPieChartOptions(
         },
       },
     },
-    cutout: 0, // Use 0 for pie chart, '50%' for doughnut
   };
 }
 
@@ -144,15 +176,59 @@ export function getPieChartOptions(
  */
 export function getDoughnutChartOptions(
   isDark: boolean,
-  showLegend: boolean = true,
-  cutout: string = "50%"
+  showLegend = true,
+  cutout = "50%"
 ): ChartOptions<"doughnut"> {
-  const pieOptions = getPieChartOptions(isDark, showLegend);
+  const textColor = isDark ? "#f3f4f6" : "#374151";
+  const backgroundColor = isDark ? "#1f2937" : "#ffffff";
+  const gridColor = isDark ? "#374151" : "#e5e7eb";
 
   return {
-    ...pieOptions,
+    responsive: CHART_CONFIG.RESPONSIVE,
+    maintainAspectRatio: CHART_CONFIG.MAINTAIN_ASPECT_RATIO,
     cutout,
-  } as ChartOptions<"doughnut">;
+    animation: {
+      duration: CHART_CONFIG.ANIMATION_DURATION,
+    },
+    plugins: {
+      legend: {
+        display: showLegend,
+        position: "bottom",
+        labels: {
+          color: textColor,
+          usePointStyle: true,
+          padding: 20,
+          font: {
+            size: 12,
+          },
+        },
+      },
+      tooltip: {
+        backgroundColor,
+        titleColor: textColor,
+        bodyColor: textColor,
+        borderColor: gridColor,
+        borderWidth: 1,
+        cornerRadius: 8,
+        titleFont: {
+          size: 14,
+          weight: "bold",
+        },
+        bodyFont: {
+          size: 13,
+        },
+        padding: 12,
+        callbacks: {
+          label: function (context: TooltipItem<"doughnut">) {
+            const label = context.label || "";
+            const value = context.parsed;
+            const percentage = formatPercentage(value);
+            return `${label}: ${percentage}`;
+          },
+        },
+      },
+    },
+  };
 }
 
 /**
@@ -160,34 +236,84 @@ export function getDoughnutChartOptions(
  */
 export function getBarChartOptions(
   isDark: boolean,
-  stacked: boolean = false
+  stacked = false
 ): ChartOptions<"bar"> {
-  const baseOptions = getBaseChartOptions(isDark);
+  const textColor = isDark ? "#f3f4f6" : "#374151";
+  const gridColor = isDark ? "#374151" : "#e5e7eb";
+  const backgroundColor = isDark ? "#1f2937" : "#ffffff";
 
   return {
-    ...baseOptions,
+    responsive: CHART_CONFIG.RESPONSIVE,
+    maintainAspectRatio: CHART_CONFIG.MAINTAIN_ASPECT_RATIO,
+    animation: {
+      duration: CHART_CONFIG.ANIMATION_DURATION,
+    },
     scales: {
-      ...baseOptions.scales,
       x: {
-        ...baseOptions.scales?.x,
+        type: "category",
         stacked,
+        ticks: {
+          color: textColor,
+          font: {
+            size: 11,
+          },
+        },
+        grid: {
+          color: gridColor,
+          display: true,
+        },
+        border: {
+          display: false,
+        },
       },
       y: {
-        ...baseOptions.scales?.y,
+        type: "linear",
         stacked,
         beginAtZero: true,
         ticks: {
-          ...baseOptions.scales?.y?.ticks,
+          color: textColor,
+          font: {
+            size: 11,
+          },
           callback: function (value) {
             return formatPercentage(Number(value));
           },
         },
+        grid: {
+          color: gridColor,
+          display: true,
+        },
+        border: {
+          display: false,
+        },
       },
     },
     plugins: {
-      ...baseOptions.plugins,
+      legend: {
+        labels: {
+          color: textColor,
+          usePointStyle: true,
+          padding: 20,
+          font: {
+            size: 12,
+          },
+        },
+      },
       tooltip: {
-        ...baseOptions.plugins?.tooltip,
+        backgroundColor,
+        titleColor: textColor,
+        bodyColor: textColor,
+        borderColor: gridColor,
+        borderWidth: 1,
+        cornerRadius: 8,
+        titleFont: {
+          size: 14,
+          weight: "bold",
+        },
+        bodyFont: {
+          size: 13,
+        },
+        padding: 12,
         callbacks: {
           label: function (context: TooltipItem<"bar">) {
             const label = context.dataset.label || "";
@@ -195,6 +321,15 @@ export function getBarChartOptions(
             return `${label}: ${formatPercentage(value)}`;
           },
         },
+      },
+    },
+    elements: {
+      point: {
+        radius: 4,
+        hoverRadius: 6,
+      },
+      line: {
+        tension: 0.4,
       },
     },
   };
@@ -205,25 +340,30 @@ export function getBarChartOptions(
  */
 export function getLineChartOptions(
   isDark: boolean,
-  showPoints: boolean = true
+  showPoints = true
 ): ChartOptions<"line"> {
-  const baseOptions = getBaseChartOptions(isDark);
+  const textColor = isDark ? "#f3f4f6" : "#374151";
+  const gridColor = isDark ? "#374151" : "#e5e7eb";
+  const backgroundColor = isDark ? "#1f2937" : "#ffffff";
 
   return {
-    ...baseOptions,
+    responsive: CHART_CONFIG.RESPONSIVE,
+    maintainAspectRatio: CHART_CONFIG.MAINTAIN_ASPECT_RATIO,
+    animation: {
+      duration: CHART_CONFIG.ANIMATION_DURATION,
+    },
     elements: {
-      ...baseOptions.elements,
       point: {
-        ...baseOptions.elements?.point,
         radius: showPoints ? 4 : 0,
         hoverRadius: showPoints ? 6 : 4,
       },
+      line: {
+        tension: 0.4,
+      },
     },
     scales: {
-      ...baseOptions.scales,
       x: {
-        ...baseOptions.scales?.x,
-        type: "time" as const,
+        type: "time",
         time: {
           displayFormats: {
             month: "MMM yyyy",
@@ -231,14 +371,72 @@ export function getLineChartOptions(
             year: "yyyy",
           },
         },
+        ticks: {
+          color: textColor,
+          font: {
+            size: 11,
+          },
+        },
+        grid: {
+          color: gridColor,
+          display: true,
+        },
+        border: {
+          display: false,
+        },
       },
       y: {
-        ...baseOptions.scales?.y,
+        type: "linear",
         beginAtZero: true,
         ticks: {
-          ...baseOptions.scales?.y?.ticks,
+          color: textColor,
+          font: {
+            size: 11,
+          },
           callback: function (value) {
             return formatPercentage(Number(value));
+          },
+        },
+        grid: {
+          color: gridColor,
+          display: true,
+        },
+        border: {
+          display: false,
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        labels: {
+          color: textColor,
+          usePointStyle: true,
+          padding: 20,
+          font: {
+            size: 12,
+          },
+        },
+      },
+      tooltip: {
+        backgroundColor,
+        titleColor: textColor,
+        bodyColor: textColor,
+        borderColor: gridColor,
+        borderWidth: 1,
+        cornerRadius: 8,
+        titleFont: {
+          size: 14,
+          weight: "bold",
+        },
+        bodyFont: {
+          size: 13,
+        },
+        padding: 12,
+        callbacks: {
+          label: function (context: TooltipItem<"line">) {
+            const label = context.dataset.label || "";
+            const value = context.parsed.y;
+            return `${label}: ${formatPercentage(value)}`;
           },
         },
       },
@@ -252,14 +450,14 @@ export function getLineChartOptions(
 export function aggregateHoldingsByKey(
   holdings: Holding[],
   key: AllocationKPI,
-  limit: number = 10,
-  includeOthers: boolean = true
+  limit = 10,
+  includeOthers = true
 ): ProcessedAllocation {
   if (!holdings.length) {
     return { labels: [], values: [], colors: [] };
   }
 
-  const aggregated: { [key: string]: number } = {};
+  const aggregated: Record<string, number> = {};
 
   holdings.forEach((holding) => {
     const keyValue = holding[key] || "Other";
@@ -298,7 +496,7 @@ export function aggregateHoldingsByKey(
 export function processTimeSeriesData(
   histories: Array<{ date: string; holdings: Holding[] }>,
   kpi: AllocationKPI,
-  topN: number = 8
+  topN = 8
 ): {
   dates: string[];
   datasets: ChartDataset[];
@@ -324,7 +522,7 @@ export function processTimeSeriesData(
   });
 
   // Build data structure for each category
-  const categoryData: { [category: string]: number[] } = {};
+  const categoryData: Record<string, number[]> = {};
 
   allCategories.forEach((category) => {
     categoryData[category] = new Array(sortedHistories.length).fill(0);
@@ -382,7 +580,7 @@ export function generateComparisonData(
   }>,
   etf1Label: string,
   etf2Label: string,
-  maxItems: number = 15
+  maxItems = 15
 ): {
   labels: string[];
   datasets: ChartDataset[];

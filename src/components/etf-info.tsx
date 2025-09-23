@@ -1,32 +1,31 @@
 "use client";
 
-import { ETF } from "@/types/etf";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatPercentage, formatDate, formatCompactNumber } from "@/lib/utils";
+import { formatCompactNumber, formatDate, formatPercentage } from "@/lib/utils";
+import { ETF } from "@/types/etf";
 import {
-  ExternalLink,
-  TrendingUp,
-  Calendar,
-  MapPin,
-  DollarSign,
-  Building2,
-  Percent,
-  Coins,
   ArrowUpRight,
-  Star,
-  Shield,
-  Zap,
-  Globe,
   Award,
-  Info,
-  BookOpen,
-  Download,
-  Share2,
   Bookmark,
-  Copy,
+  BookOpen,
+  Building2,
+  Calendar,
   CheckCircle,
+  Coins,
+  Copy,
+  DollarSign,
+  Download,
+  ExternalLink,
+  Globe,
+  Info,
+  MapPin,
+  Percent,
+  Shield,
+  Star,
+  TrendingUp,
+  Zap,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -137,10 +136,7 @@ const ActionButtons: React.FC<{ etf: ETF }> = ({ etf }) => {
   return (
     <div className="flex flex-wrap gap-3 justify-center">
       {etf.link && (
-        <Button
-          asChild
-          className="bg-gradient-to-r from-primary-600 to-purple-600 hover:from-primary-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
-        >
+        <Button className="bg-gradient-to-r from-primary-600 to-purple-600 hover:from-primary-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300">
           <a
             href={etf.link}
             target="_blank"
