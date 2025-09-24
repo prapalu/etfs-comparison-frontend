@@ -1,38 +1,34 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { Select } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 import { ComparisonChart } from "@/components/charts/comparison-chart";
-import { formatPercentage, formatCompactNumber, formatDate } from "@/lib/utils";
-import {
-  GitCompare,
-  TrendingUp,
-  TrendingDown,
-  DollarSign,
-  MapPin,
-  Building2,
-  Zap,
-  Star,
-  Shield,
-  ArrowRight,
-  BarChart3,
-  PieChart,
-  Activity,
-  Target,
-  Sparkles,
-  Award,
-  RefreshCw,
-  Download,
-  Share2,
-  AlertTriangle,
-  CheckCircle,
-  Equal,
-  X,
-  Calendar,
-} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Select } from "@/components/ui/select";
+import { formatCompactNumber, formatDate, formatPercentage } from "@/lib/utils";
 import { ComparisonResult, ETF } from "@/types/etf";
+import {
+  Activity,
+  AlertTriangle,
+  BarChart3,
+  Building2,
+  Calendar,
+  CheckCircle,
+  DollarSign,
+  Download,
+  Equal,
+  GitCompare,
+  MapPin,
+  PieChart,
+  RefreshCw,
+  Share2,
+  Star,
+  Target,
+  TrendingDown,
+  TrendingUp,
+  X,
+  Zap,
+} from "lucide-react";
+import { useMemo, useState } from "react";
 
 interface ETFComparisonProps {
   etfs: ETF[];
@@ -329,7 +325,7 @@ export const ETFComparison: React.FC<ETFComparisonProps> = ({
   const etfOptions = useMemo(
     () =>
       etfs.map((etf) => ({
-        value: etf._id,
+        value: etf.ticker,
         label: `${etf.ticker} - ${etf.name}`,
       })),
     [etfs]
@@ -357,8 +353,8 @@ export const ETFComparison: React.FC<ETFComparisonProps> = ({
     setHasCompared(false);
   };
 
-  const etf1 = etfs.find((etf) => etf._id === selectedETF1);
-  const etf2 = etfs.find((etf) => etf._id === selectedETF2);
+  const etf1 = etfs.find((etf) => etf.ticker === selectedETF1);
+  const etf2 = etfs.find((etf) => etf.ticker === selectedETF2);
 
   const canCompare =
     selectedETF1 && selectedETF2 && selectedETF1 !== selectedETF2;
@@ -440,6 +436,7 @@ export const ETFComparison: React.FC<ETFComparisonProps> = ({
                 value={selectedETF2}
                 onChange={setSelectedETF2}
                 options={etfOptions.filter((opt) => opt.value !== selectedETF1)}
+                searchable
                 placeholder="Search and select second ETF..."
                 className="w-full"
               />

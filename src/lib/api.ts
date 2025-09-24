@@ -207,7 +207,7 @@ export const api = {
         throw new ApiError(400, "Cannot compare ETF with itself", "SAME_ETFS");
       }
 
-      return fetchApi<ComparisonResponse>("/compare", {
+      return fetchApi<ComparisonResponse>("/compare/detailed", {
         params: {
           etf1,
           etf2,
