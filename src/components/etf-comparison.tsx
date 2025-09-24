@@ -411,6 +411,7 @@ export const ETFComparison: React.FC<ETFComparisonProps> = ({
               <Select
                 value={selectedETF1}
                 onChange={setSelectedETF1}
+                searchable
                 options={etfOptions.filter((opt) => opt.value !== selectedETF2)}
                 placeholder="Search and select first ETF..."
                 className="w-full"
